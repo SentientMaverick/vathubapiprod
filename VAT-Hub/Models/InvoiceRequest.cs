@@ -19,7 +19,8 @@ namespace VAT_Hub.Models
         public string typeOfCargo { get; set; }
         public string portOfCall { get; set; }
         public string rotationNumber { get; set; }
-        public IList<Item> Items { get; set; }
+        public string source { get; set; }
+        public IList<Item> items { get; set; }
         public string totalAmount { get; set; }
         public string totalVat { get; set; }
     }
