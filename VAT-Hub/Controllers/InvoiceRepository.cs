@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Net.Http.Headers;
 using System.Web.Script.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace VAT_Hub.Controllers
 {
@@ -27,21 +28,38 @@ namespace VAT_Hub.Controllers
             Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
             var response = new InvoiceResponse();
             var json = new JavaScriptSerializer().Serialize(request);
-            HttpContent _Body = new StringContent(json);
-            // and add the header to this object instance
-            // optional: add a formatter option to it as well
-            _Body.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            // synchronous request without the need for .ContinueWith() or await
-            HttpResponseMessage  asresponse = Client.PostAsync("RDCWebServices/RDCPush.jsp", _Body).Result;
-            if (asresponse.IsSuccessStatusCode)
-            {
-                var resresultasstring = await asresponse.Content.ReadAsStringAsync();
-            }
+            //HttpRequestMessage requestss = new HttpRequestMessage(HttpMethod.Post, "RDCWebServices/RDCPush.jsp");
+            //requestss.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            //var sss = Client.SendAsync(requestss).Result;
+            //if (sss.IsSuccessStatusCode)
+            //{
+            //    var stringsd = sss.Content.ReadAsStringAsync();
+            //}
+            //HttpContent _Body = new StringContent(json);
+            //// and add the header to this object instance
+            //// optional: add a formatter option to it as well
+            //_Body.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            //// synchronous request without the need for .ContinueWith() or await
+            //HttpResponseMessage  asresponse = Client.PostAsync("RDCWebServices/RDCPush.jsp", _Body).Result;
+            //if (asresponse.IsSuccessStatusCode)
+            //{
+            //    var resresultasstring = await asresponse.Content.ReadAsStringAsync();
+            //}
             var result = await Client.PostAsJsonAsync("RDCWebServices/RDCPush.jsp", request);
             if (result.IsSuccessStatusCode)
             {
                 var resultasstring = await result.Content.ReadAsStringAsync();
-                response = JsonConvert.DeserializeObject<InvoiceResponse>(resultasstring);
+                //dynamic obj = JsonConvert.DeserializeObject<dynamic>(resultasstring);
+               // object objs = resultasstring;
+                //string responsestring = JsonConvert.DeserializeObject<string>(resultasstring);
+                JObject s = JObject.Parse(resultasstring);
+                response.Bill_Number = (string)s["Bill Number"];
+                response.folderRSN = (string)s["folderRSN"];
+                response.freeFormRSN = (string)s["freeFormRSN"];
+                response.peopleRSN = (string)s["peopleRSN"];
+                response.status = (string)s["status"];
+                response.statusCode = (string)s["statusCode"];
+                //  response = JsonConvert.DeserializeObject<InvoiceResponse>(resultasstring);
             }
             else
             {
@@ -53,7 +71,7 @@ namespace VAT_Hub.Controllers
         {
             InvoiceResponse response = new InvoiceResponse();
             response.Bill_Number = "Payment Reference generated";
-            response.peopleRSN = "025";
+            response.peopleRSN = "0";
             response.folderRSN = "310007680995";
             response.statusCode = "310007680995";
             response.status = "310007680995";

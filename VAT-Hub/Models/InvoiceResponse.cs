@@ -2,6 +2,7 @@
 {
     public class InvoiceResponse
     {
+        public string freeFormRSN { get; internal set; }
         public string Bill_Number { get; internal set; }
         public string folderRSN { get; internal set; }
         public string peopleRSN { get; internal set; }

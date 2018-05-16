@@ -36,9 +36,16 @@ namespace VAT_Hub.Controllers
                 }
                 InvoiceRepository _repository = new InvoiceRepository();
                 InvoiceResponse response = await _repository.PushInvoiceToRDCBrains(request);
-                if (response.statusCode == "025")
+                if (response.statusCode == "0")
                 {
-                    return Created<InvoiceResponse>(Request.RequestUri, response);
+                    Dictionary<string, string> jsonresponse = new Dictionary<string, string>();
+                    jsonresponse["Bill Number"] = response.Bill_Number;
+                    jsonresponse["freeFormRSN"] = response.freeFormRSN;
+                    jsonresponse["peopleRSN"] = response.peopleRSN;
+                    jsonresponse["folderRSN"] = response.folderRSN;
+                    jsonresponse["statusCode"] = response.statusCode;
+                    jsonresponse["status"] = response.status;
+                    return Created(Request.RequestUri, jsonresponse);
                 }
                 return BadRequest();
             }

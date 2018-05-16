@@ -7,10 +7,11 @@ namespace VAT_Hub.Models
 {
     public class Item
     {
-        public string Description { get; set; }
+        public string description { get; set; }
         public string uom { get; set; }
         public int unit { get; set; }
-        public decimal Amount { get; set; }
+        public string amount { get; set; }
+        public string vatAmount { get; set; }
         public bool isVatable { get; set; }
     }
 }
