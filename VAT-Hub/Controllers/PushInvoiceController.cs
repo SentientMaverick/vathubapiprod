@@ -36,7 +36,7 @@ namespace VAT_Hub.Controllers
                 }
                 InvoiceRepository _repository = new InvoiceRepository();
                 InvoiceResponse response = await _repository.PushInvoiceToRDCBrains(request);
-                if (response.statusCode == "025")
+                if (response.statusCode == "0")
                 {
                     return Created<InvoiceResponse>(Request.RequestUri, response);
                 }
